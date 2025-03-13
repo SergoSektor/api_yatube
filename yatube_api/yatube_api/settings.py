@@ -1,13 +1,22 @@
 import os
 from datetime import timedelta
 
+import environ
+
+env = environ.Env()
+
+environ.Env.read_env()
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'hhz7l-ltdismtf@bzyz+rple7*s*w$jak%whj@(@u0eok^f9k4'
+SECRET_KEY = env(
+    'SECRET_KEY',
+    default="unsafe-secret-key-45t548fh48fh4gefgh4734753erhg#$@#$")
 
-DEBUG = True
+DEBUG = env('DEBUG', default='True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env(
+    'ALLOWED_HOSTS', default='localhost').split(', ')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -16,8 +25,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
-    'django_filters',
     'djoser',
     'api',
     'posts',
@@ -62,26 +71,30 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+            'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+            'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+            'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -102,3 +115,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
