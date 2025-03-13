@@ -1,17 +1,25 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken.views import obtain_auth_token
-from .views import PostViewSet, GroupViewSet, CommentViewSet
+from rest_framework import routers
+from django.views.generic import TemplateView
 
-router = DefaultRouter()
-router.register('posts', PostViewSet, basename='posts')
-router.register('groups', GroupViewSet, basename='groups')
+from .views import (CommentViewSet, FollowViewSet, GroupViewSet,
+                    PostViewSet, UserViewSet)
 
-comments_router = DefaultRouter()
-comments_router.register('comments', CommentViewSet, basename='comments')
+router_v1 = routers.DefaultRouter()
+router_v1.register(r'posts', PostViewSet)
+router_v1.register(r'users', UserViewSet)
+router_v1.register(r'groups', GroupViewSet)
+router_v1.register(r'follow', FollowViewSet)
+router_v1.register(r'posts/(?P<post_id>\d+)/comments',
+                   CommentViewSet, basename='comments')
+
 
 urlpatterns = [
-    path('v1/', include(router.urls)),
-    path('v1/posts/<int:post_id>/', include(comments_router.urls)),
-    path('v1/api-token-auth/', obtain_auth_token),
+    path('api/v1/', include(router_v1.urls)),
+    path('api/v1/', include('djoser.urls.jwt')),
+    path(
+        'redoc/',
+        TemplateView.as_view(template_name='redoc.html'),
+        name='redoc'
+    ),
 ]
