@@ -61,4 +61,3 @@ class FollowViewSet(mixins.CreateModelMixin,
 
     def perform_create(self, serializer):
         return serializer.save(user=self.request.user)
-    
